@@ -65,6 +65,6 @@ filter [ [ ] over2 over2 len 0 swap
 [ dup4 swap vat dup over3 eval dsct dsct [ quote compose ] [ dsc ] if swap 1 + dsct dsct dsct over3 swap over3 swap ] swap loop-times dsc3 dscd dscd ] def
 
 # int int -> quote
-range [ [ ] over2 over2 - [ over2 quote compose [ [ + ] dip ] dip ] swap loop-times dscd dscd ] def
+range [ [ ] over2 over2 - [ [ [ dsc ] dip ] dip ] dip [ over quote compose [ 1 + ] dip ] swap loop-times dscd dscd ] def
 
-# [int1][int2][retval]
+# [int1][][int][code]
