@@ -1,19 +1,20 @@
 #!/usr/local/bin/stem
 # Author: Preston Pan
+
+
 evalstr [ strquote eval ] def
 include [ fread evalstr ] def
 
 neg [ 0 swap - ] def
 
-# Author of loop deftion: Andrei S
-loop [
-  swap dup 0 > [
-    swap
-    dup eval
-    swap 1 - swap loop
-  ] [ dsc dsc ] if
-] def
-
+# andrei's loop function -- deprecated in favor of matthew's loop
+#loop [
+#  swap dup 0 > [
+#    swap
+#    dup eval
+#    swap 1 - swap loop
+#  ] [ dsc dsc ] if
+#] def
 
 swapd [ [ swap ] dip ] def
 swapt [ [ [ swap ] dip ] dip ] def
@@ -23,11 +24,11 @@ swap3 [ swapt swapd swap ] def
 
 dscd [ swap dsc ] def
 dsct [ swapd swap dsc ] def
+dscq [ swapt swapd swap dsc ] def
 
 dsc2 [ dsc dsc ] def
 dsc3 [ dsc dsc dsc ] def
 
-# Author: Matthew H
 dupd [ [ dup ] dip ] def
 dupt [ [ [ dup ] dip ] dip ] def
 dupq [ [ [ [ dup ] dip ] dip ] dip ] def
@@ -48,8 +49,8 @@ keep [ over [ eval ] dip ] def
 while [  dup2 [ [ ] if ] dip2 over [ while ] [ dsc dsc ] if ] def
 when [ [ ] if ] def
 
-loop-times [ dup2 [ swap [ ] if ] dip2
-dup [ 1 - loop-times ] [ dsc2 ] if ] def
+loop [ dup2 [ swap [ ] if ] dip2
+dup [ 1 - loop ] [ dsc2 ] if ] def
 
 
 # d>base [ [ pow * "" swap ] keep2
@@ -57,14 +58,24 @@ dup [ 1 - loop-times ] [ dsc2 ] if ] def
 # [ [ over ] [ [ dup2 / floor * swap over - ] keep [ [ "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "↊" "↋" ] vat swap + ] with dip2 ] while dsc2 dup len(str-len) ] dip
 # - dup2 tail [ head "." ] dip + + ] def
 
-# Author: Preston Pan
+factorial [ dup 0 <= [ 1 + ] [ dup 1 - factorial * ] if ] def
+abs [ dup 0 < [ neg ] [ ] if ] def
+PI 3.1415926 def
+E 2.718281828 def
+
 map [ [ ] over2 over2 len 0 swap
-[ dup4 swap vat over2 eval dscd dscd quote compose swap 1 + dsct dsct dsct over3 swap over3 swap ] swap loop-times dsc3 dscd dscd ] def
+[ dup4 swap vat over2 eval dscd dscd quote compose swap 1 + dsct dsct dsct over3 swap over3 swap ] swap loop dsc3 dscd dscd ] def
 
 filter [ [ ] over2 over2 len 0 swap
-[ dup4 swap vat dup over3 eval dsct dsct [ quote compose ] [ dsc ] if swap 1 + dsct dsct dsct over3 swap over3 swap ] swap loop-times dsc3 dscd dscd ] def
+[ dup4 swap vat dup over3 eval dsct dsct [ quote compose ] [ dsc ] if swap 1 + dsct dsct dsct over3 swap over3 swap ] swap loop dsc3 dscd dscd ] def
 
-# int int -> quote
-range [ [ ] over2 over2 - [ [ [ dsc ] dip ] dip ] dip [ over quote compose [ 1 + ] dip ] swap loop-times dscd dscd ] def
+# [starting value] [non-inclusive ending value] => [quote]
+range [ [ ] over2 over2 - abs [ [ dsc ] dip ] dip [ over quote compose [ 1 + ] dip ] swap loop dscd ] def
 
-# [int1][][int][code]
+# reduce [accumulator] [quote] => value
+reduce [ 0 swap vat [ len ] dip swap swapd 1 swap 1 - [ dup4 swap vat dscd swap2 eval dscq swap swapd 1 + ] swap loop dsc2 dscd ] def
+
+# [acc][quote][qval]
+# [acc][newval][quote][2][acc][newval][quote][vat]
+# TODO: sort
+sort [  ] def
