@@ -2,7 +2,7 @@
 
 
 unQstack [
-      len len [ dup 1 - dip vat ] swap loop-times
+      len len [ dup 1 - dip vat ] swap loop
 ] def
 
 [ 1 2 3 4 ] unQstack

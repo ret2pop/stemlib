@@ -49,8 +49,7 @@ keep [ over [ eval ] dip ] def
 while [  dup2 [ [ ] if ] dip2 over [ while ] [ dsc dsc ] if ] def
 when [ [ ] if ] def
 
-loop [ dup2 [ swap [ ] if ] dip2
-dup [ 1 - loop ] [ dsc2 ] if ] def
+loop [ dup2 [ swap [ ] if ] dip2 dup [ 1 - loop ] [ dsc2 ] if ] def
 
 
 # d>base [ [ pow * "" swap ] keep2
@@ -60,22 +59,25 @@ dup [ 1 - loop ] [ dsc2 ] if ] def
 
 factorial [ dup 0 <= [ 1 + ] [ dup 1 - factorial * ] if ] def
 abs [ dup 0 < [ neg ] [ ] if ] def
+
 PI 3.1415926 def
 E 2.718281828 def
 
 map [ [ ] over2 over2 len 0 swap
-[ dup4 swap vat over2 eval dscd dscd quote compose swap 1 + dsct dsct dsct over3 swap over3 swap ] swap loop dsc3 dscd dscd ] def
+[ dup4 swap vat over2 eval dscd dscd quote compose swap 1 + dsct dsct dsct over3 swap over3 swap ]
+swap loop dsc3 dscd dscd ] def
 
 filter [ [ ] over2 over2 len 0 swap
-[ dup4 swap vat dup over3 eval dsct dsct [ quote compose ] [ dsc ] if swap 1 + dsct dsct dsct over3 swap over3 swap ] swap loop dsc3 dscd dscd ] def
+[ dup4 swap vat dup over3 eval dsct dsct [ quote compose ] [ dsc ] if swap 1 + dsct dsct dsct over3 swap over3 swap ]
+swap loop dsc3 dscd dscd ] def
 
 # [starting value] [non-inclusive ending value] => [quote]
 range [ [ ] over2 over2 - abs [ [ dsc ] dip ] dip [ over quote compose [ 1 + ] dip ] swap loop dscd ] def
 
 # reduce [accumulator] [quote] => value
-reduce [ 0 swap vat [ len ] dip swap swapd 1 swap 1 - [ dup4 swap vat dscd swap2 eval dscq swap swapd 1 + ] swap loop dsc2 dscd ] def
+reduce [ 0 swap vat [ len ] dip swap swapd 1 swap 1 -
+[ dup4 swap vat dscd swap2 eval dscq swap swapd 1 + ]
+swap loop dsc2 dscd ] def
 
-# [acc][quote][qval]
-# [acc][newval][quote][2][acc][newval][quote][vat]
-# TODO: sort
+# TODO: sort [comparator][quote] => quote
 sort [  ] def
