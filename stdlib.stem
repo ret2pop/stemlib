@@ -18,6 +18,9 @@ loop [
 swapd [ [ swap ] dip ] def
 swapt [ [ [ swap ] dip ] dip ] def
 
+swap2 [ swapd swap ] def
+swap3 [ swapt swapd swap ] def
+
 dscd [ swap dsc ] def
 dsct [ swapd swap dsc ] def
 
@@ -60,3 +63,8 @@ map [ [ ] over2 over2 len 0 swap
 
 filter [ [ ] over2 over2 len 0 swap
 [ dup4 swap vat dup over3 eval dsct dsct [ quote compose ] [ dsc ] if swap 1 + dsct dsct dsct over3 swap over3 swap ] swap loop-times dsc3 dscd dscd ] def
+
+# int int -> quote
+range [ [ ] over2 over2 - [ over2 quote compose [ [ + ] dip ] dip ] swap loop-times dscd dscd ] def
+
+# [int1][int2][retval]
