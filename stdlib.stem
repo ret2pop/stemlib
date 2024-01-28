@@ -1,10 +1,6 @@
 #!/usr/local/bin/stem
 # Author: Preston Pan
 
-
-evalstr [ strquote eval ] def
-include [ fread evalstr ] def
-
 neg [ 0 swap - ] def
 
 # andrei's loop function -- deprecated in favor of matthew's loop
@@ -18,9 +14,12 @@ neg [ 0 swap - ] def
 
 swapd [ [ swap ] dip ] def
 swapt [ [ [ swap ] dip ] dip ] def
+swapq [ [ [ [ swap ] dip ] dip ] dip ] def
+
 
 swap2 [ swapd swap ] def
 swap3 [ swapt swapd swap ] def
+swap4 [ swapq swapt swapd swap ] def
 
 dscd [ swap dsc ] def
 dsct [ swapd swap dsc ] def
@@ -46,19 +45,21 @@ dip3 [ swap [ dip ] dip ] def
 
 keep [ over [ eval ] dip ] def
 
-while [  dup2 [ [ ] if ] dip2 over [ while ] [ dsc dsc ] if ] def
 when [ [ ] if ] def
+while [ dup2 [ when ] dip2 over [ while ] [ dsc2 ] if ] def
 
 loop [ dup2 [ swap [ ] if ] dip2 dup [ 1 - loop ] [ dsc2 ] if ] def
 
-
+dipn [ [ [ dip ] curry ] swap loop eval ] def
+swapn [ [ swap ] swap dipn ] def
+dupn [ [ dup ] swap dipn ] def
 # d>base [ [ pow * "" swap ] keep2
 
 # [ [ over ] [ [ dup2 / floor * swap over - ] keep [ [ "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "↊" "↋" ] vat swap + ] with dip2 ] while dsc2 dup len(str-len) ] dip
 # - dup2 tail [ head "." ] dip + + ] def
 
 factorial [ dup 0 <= [ 1 + ] [ dup 1 - factorial * ] if ] def
-abs [ dup 0 < [ neg ] [ ] if ] def
+abs [ dup 0 < [ neg ] when ] def
 
 PI 3.1415926 def
 E 2.718281828 def
@@ -71,13 +72,19 @@ filter [ [ ] over2 over2 len 0 swap
 [ dup4 swap vat dup over3 eval dsct dsct [ quote compose ] [ dsc ] if swap 1 + dsct dsct dsct over3 swap over3 swap ]
 swap loop dsc3 dscd dscd ] def
 
-# [starting value] [non-inclusive ending value] => [quote]
+# range: [starting value] [non-inclusive ending value] => [quote]
 range [ [ ] over2 over2 - abs [ [ dsc ] dip ] dip [ over quote compose [ 1 + ] dip ] swap loop dscd ] def
 
-# reduce [accumulator] [quote] => value
+# reduce: [accumulator] [quote] => value
 reduce [ 0 swap vat [ len ] dip swap swapd 1 swap 1 -
 [ dup4 swap vat dscd swap2 eval dscq swap swapd 1 + ]
 swap loop dsc2 dscd ] def
 
-# TODO: sort [comparator][quote] => quote
-sort [  ] def
+# merge [ comparator ] [ list A ] [ list B ] => sorted list
+# [ b a ] [ compar ] A B
+merge [ [ ] swap swapd swapt
+      [ len swapd [ len ] dip 0 > swap 0 > and ]
+      [ uncurry swapd [ uncurry ] dip 4 dupn swap4 eval [ swap ] when 4 swapn 3 swapn swap3 curry curry swap swapd swapt ]
+      while dsc3 ] def
+# TODO: sort: [comparator] [quote] => [sorted quote]
+sort [ len 1 > [ len 2 / floor 1 - cut dupt swapd sort dupt swap swapd sort dupt merge ] when dscd ] def

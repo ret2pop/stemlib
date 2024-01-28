@@ -1,5 +1,4 @@
-"./stdlib.stem" fread strquote eval
-
+"stdlib.stem" include eval
 # You can make your own REPL by changing the code!
 
 repl [ "> " . read strquote eval repl ] def repl
